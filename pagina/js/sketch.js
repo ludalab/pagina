@@ -1,159 +1,142 @@
-var potencia;
-var poligono;
-var listaPoligonos = []
 var cantidad;
-var colors = [];
-var textos = ['~\\','\|/','-\'','"-','^<','.*','+\''];
-var primos = [3,5,7,11,13];
-var mirrors = [1,2,3,5]
-var fr = 24;
-var blender = 213;
-var paso = 0.4;
-var maxspeed = 0.05;
-var tamanioletra = 48;
-let img;
+var separacion;
+var radioMax;
+var x, y;
+var grilla = [];
+var triangulos = [];
+var sat, bri;
+var rosa,celeste,violeta,morado,cian2
 
 function setup() {
-  var canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent('sketch-holder');
-  background(254,236,241);
-  if (width*height < 480000)
-  {
-    cantidad = 11;
-  }
-  else
-  {
-    cantidad = 24
-  }
-  img = loadImage('bg_LudaLab.png');
-  
-  frameRate(fr);
+  colorMode(RGB);
+  rosa = color(250, 107, 255);
+  celeste = color(116, 255, 222);
+  violeta = color(174, 60, 215);
+  morado = color(67, 0, 91);
+  cian2 = color(70, 255, 164);
+  colores = [rosa,celeste,violeta,morado,cian2];
 
-  for (var i=0;i < cantidad;i++)
-  {
-    listaPoligonos.push(new drawPolygons(random(primos),random(width),random(height),frameCount / 1000*int(random(1,5)),color(random(212,252),random(234,252),random(234,252)),100,true,random(mirrors),random(textos)));
+  colorMode(HSB);
+  frameRate(24);
+  sat = 15;
+  bri = 95;
+  createCanvas(windowWidth, windowHeight);
+  cantidad = 8;
+  separacion = max(width, height) / cantidad;
+  radioMax = separacion / 2
+  translate(-separacion, -separacion);
+  for (let i = 0; i < cantidad + 2; i++) {
+    grilla[i] = []
+    for (let j = 0; j < cantidad + 2; j++) {
+      grilla[i][j] = new Punto(i, j);
+    }
   }
-  colors = [color(254,236,241),color(238,238,251),color(246,232,250)];
-  potencia = 1.20;
+  for (let i = 0; i < cantidad + 1; i++) {
+    triangulos[i] = []
+    for (let j = 0; j < cantidad + 1; j++) {
+      triangulos[i][j] = new Triangulo(grilla[i][j], grilla[i + 1][j], grilla[i][j + 1], grilla[i + 1][j + 1]);
+    }
+  }
 }
 
 function draw() {
-  //background(254,236,241);
-  //background(0);
-   //background(248);
+  background(220);
+  translate(-separacion / 2, -separacion / 2);
+  for (var i = 0; i < cantidad + 2; i++) {
+    for (var j = 0; j < cantidad + 2; j++) {
+      grilla[i][j].move();
 
-  // if (blender >= 252)
-  // {
-
-  //   paso = -paso;
-  // }
-  // if (blender <= 212)
-  // {
-  //   paso = -paso;
-  // }
-  // background(blender);
-  // blender += paso;
-
-
-
-
-  if (blender >= 252)
-  {
-
-    paso = -paso;
-  }
-  if (blender <= 212)
-  {
-    paso = -paso;
-  }
-  background(50);
-  
-  blender += paso;
-
-
-
-  // for (var i=0;i <listaPoligonos.length; i++)
-  // {
-  //   push();
-  //   translate(listaPoligonos[i].posx, listaPoligonos[i].posy);
-  //   rotate(listaPoligonos[i].rotatevar);
-  //   listaPoligonos[i].show();
-  //   pop();
-  // }
-  image(img, 0, 0,img.width/2,img.height/2);
-}
-
-
-function drawPolygons(n,posx,posy,rotatevar,colorcito,radius,randomFlag,mirror,textual="")
-{
-  if (n<3){
-    return false;
-  }
-  this.radius = radius;
-  this.posx = posx;
-  this.posy = posy;
-  this.rotatevar = rotatevar
-  this.rotateAngle = random(-maxspeed,maxspeed);
-  this.sep = 1.05;
-  this.mir = mirror;
-  this.texto = "";
-  this.conTexto=false;
-  if(textual!=""){
-    this.conTexto=true;
-    this.texto =textual;
-  }
-
-  this.rotationX = radians(random(1,360));
-  this.rotationY = radians(random(1,360));
-
-  this.colorcito = colorcito;
-
-  this.aperture = 360/n;
-  this.nnn = n;
-  this.angles = []
-  this.puntos = [];
-
-  for (var i=0;i<this.nnn;i++)
-    {
-
-      randomAng = randomFlag ? random(0,this.aperture/2):0;
-      this.angles[i] = i*(this.aperture)+randomAng;
-      this.puntos[i] = [this.radius*cos(radians(this.angles[i])),this.radius*sin(radians(this.angles[i]))];
-    }
-
-  this.update = function() {
-
- }
-
-  this.show = function()
-  {
-    stroke(this.colorcito);
-    this.posx
-
-    for(var k = 0; k < this.mir; k++)
-    {
-      strokeWeight(1);
-      strokeWeight(1+(k*2));
-      noFill();
-      beginShape();
-      //vertex(this.puntos[0][0]*Math.pow(potencia,k), this.puntos[this.nnn-1][1]*Math.pow(potencia,k));
-      for (var i = 0; i < this.nnn;i++)
-      {
-        this.angles[i]+=this.rotateAngle;
-        this.puntos[i] = [this.radius*cos(radians(this.angles[i])),this.radius*sin(radians(this.angles[i]))];
-
-        vertex(this.puntos[i][0]*Math.pow(potencia,k), this.puntos[i][1]*Math.pow(potencia,k));
+      if (i < cantidad + 1 && j < cantidad + 1) {
+        triangulos[i][j].display();
       }
-      vertex(this.puntos[0][0]*Math.pow(potencia,k), this.puntos[0][1]*Math.pow(potencia,k));
-      //vertex(this.puntos[1][0]*Math.pow(potencia,k), this.puntos[1][1]*Math.pow(potencia,k));
-      endShape();
+      //grilla[i][j].display();
     }
-    //textSize(tamanioletra);
-    //textAlign(CENTER, CENTER);
-    //strokeWeight(0);
-    //fill(246,232,250);
-    //text(this.texto, 0, 0);
-
   }
 }
 
+class Punto {
+  constructor(px, py) {
+    this.centrox = px * separacion;
+    this.centroy = py * separacion;
+    this.x = this.centrox;
+    this.y = this.centroy;
+
+    if (px <= 0) {
+      this.targetx = this.centrox - random(0, radioMax)
+    } else if (px >= cantidad) {
+      this.targetx = this.centrox + random(0, radioMax)
+    } else {
+      this.targetx = this.centrox + random(-radioMax, radioMax)
+    }
+
+    if (py <= 0) {
+      this.targety = this.centroy - random(0, radioMax)
+    } else if (py >= cantidad) {
+      this.targety = this.centroy + random(0, radioMax)
+    } else {
+      this.targety = this.centroy + random(-radioMax, radioMax)
+    }
+
+    this.speed = 0.010;
+  }
+
+  move() {
+    this.x = lerp(this.x, this.targetx, this.speed);
+    this.y = lerp(this.y, this.targety, this.speed);
+
+    let d = int(dist(this.x, this.y, this.targetx, this.targety));
+    if (d <= 10) {
+      this.targetx = this.centrox + random(-radioMax, radioMax)
+      this.targety = this.centroy + random(-radioMax, radioMax)
+    }
+
+
+  }
+
+  display() {
+    stroke(50);
+    strokeWeight(3);
+    point(this.x, this.y);
+
+    stroke(50);
+    strokeWeight(5);
+    point(this.targetx, this.targety);
+
+    strokeWeight(1);
+    line(this.x, this.y, this.targetx, this.targety);
+  }
+}
+
+class Triangulo {
+  constructor(punto1, punto2, punto3, punto4) {
+    let forma = random([true, false]);
+    if (forma) {
+      this.punto1 = punto1;
+      this.punto2 = punto2;
+      this.punto3 = punto3;
+      this.punto4 = punto4;
+    } else {
+      this.punto1 = punto2;
+      this.punto2 = punto1;
+      this.punto3 = punto4;
+      this.punto4 = punto3;
+    }
+    let hue1 = random(0, 360);
+    let hue2 = random(0, 360);
+    this.color1 = color(hue1, sat, bri);
+    this.color2 = color(hue2, sat, bri);
+  }
+
+  display() {
+    stroke(100);
+    fill(this.color1);
+
+    triangle(this.punto1.x, this.punto1.y, this.punto2.x, this.punto2.y, this.punto4.x, this.punto4.y);
+
+    stroke(85);
+    fill(this.color2);
+
+    triangle(this.punto1.x, this.punto1.y, this.punto3.x, this.punto3.y, this.punto4.x, this.punto4.y);
+
+  }
+}
