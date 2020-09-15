@@ -6,24 +6,28 @@ var grilla = [];
 var triangulos = [];
 var sat, bri;
 var rosa,celeste,violeta,morado,cian2
+//var colores = [];
+//var colores2 = [];
+var changeColorSpeed;
+var moveTriangleSpeed;
+
 
 function setup() {
-  colorMode(RGB);
-  rosa = color(250, 107, 255);
-  celeste = color(116, 255, 222);
-  violeta = color(174, 60, 215);
-  morado = color(67, 0, 91);
-  cian2 = color(70, 255, 164);
-  colores = [rosa,celeste,violeta,morado,cian2];
-
   colorMode(HSB);
+  //colorMode(RGB);
+  //colores = [color(250, 107, 255),color(116, 255, 222),color(174, 60, 215),color(67, 0, 91),color(70, 255, 164)];
+  //colores2 = [color(50, 0, 108),color(244, 6, 126),color(255, 80, 164),color(215, 94, 173),color(244, 206, 227)];
+
+  changeColorSpeed = 0.5;
+  moveTriangleSpeed = 0.015;
+
   frameRate(24);
   sat = 15;
-  bri = 90;
+  bri = 95;
   createCanvas(windowWidth, windowHeight);
   cantidad = 8;
   separacion = max(width, height) / cantidad;
-  radioMax = separacion / 2
+  radioMax = separacion/3
   translate(-separacion, -separacion);
   for (let i = 0; i < cantidad + 2; i++) {
     grilla[i] = []
@@ -42,6 +46,8 @@ function setup() {
 function draw() {
   background(220);
   translate(-separacion / 2, -separacion / 2);
+  changeColorSpeed = (mouseX/width)/10;
+  moveTriangleSpeed = (mouseY/height)/10;
   for (var i = 0; i < cantidad + 2; i++) {
     for (var j = 0; j < cantidad + 2; j++) {
       grilla[i][j].move();
@@ -77,12 +83,11 @@ class Punto {
       this.targety = this.centroy + random(-radioMax, radioMax)
     }
 
-    this.speed = 0.010;
   }
 
   move() {
-    this.x = lerp(this.x, this.targetx, this.speed);
-    this.y = lerp(this.y, this.targety, this.speed);
+    this.x = lerp(this.x, this.targetx, moveTriangleSpeed);
+    this.y = lerp(this.y, this.targety, moveTriangleSpeed);
 
     let d = int(dist(this.x, this.y, this.targetx, this.targety));
     if (d <= 10) {
@@ -121,22 +126,32 @@ class Triangulo {
       this.punto3 = punto4;
       this.punto4 = punto3;
     }
-    let hue1 = random(140,210);
-    let hue2 = random(140,210);
-    this.color1 = color(hue1, sat, bri);
-    this.color2 = color(hue2, sat, bri);
+    this.color1 = color(random(140,210),sat,bri);
+    this.color2 = color(random(140,210),sat,bri);
+    this.nextcolor1 = color(random(140,210),sat,bri);
+    this.nextcolor2 = color(random(140,210),sat,bri);
   }
 
   display() {
-    stroke(100);
+    stroke(this.color2);
     fill(this.color1);
 
     triangle(this.punto1.x, this.punto1.y, this.punto2.x, this.punto2.y, this.punto4.x, this.punto4.y);
 
-    stroke(85);
+    stroke(this.color1);
     fill(this.color2);
 
     triangle(this.punto1.x, this.punto1.y, this.punto3.x, this.punto3.y, this.punto4.x, this.punto4.y);
 
+    let distancia1 = dist(red(this.color1),green(this.color1),blue(this.color1),red(this.nextcolor1),green(this.nextcolor1),blue(this.nextcolor1));
+    let distancia2 = dist(red(this.color2),green(this.color2),blue(this.color2),red(this.nextcolor2),green(this.nextcolor2),blue(this.nextcolor2));
+    this.color1 = lerpColor(this.color1,this.nextcolor1,changeColorSpeed);
+    if (distancia1<=20){
+        this.nextcolor1 =  color(random(140,210),sat,bri);
+    }
+    this.color2 = lerpColor(this.color2,this.nextcolor2,changeColorSpeed);
+    if (distancia2<=20){
+        this.nextcolor2 =  color(random(140,210),sat,bri);
+    }
   }
 }
