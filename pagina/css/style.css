@@ -174,17 +174,17 @@ h1, h2, h3, h4, h5,
 .ftco-slant {
   position: relative;
   overflow: hidden; }
-  .ftco-slant:after {
+  /* .ftco-slant:after {
     width: 120%;
     height: 200px;
     left: -10%;
     background: #f2f2f2;
-    -webkit-transform: rotate(-5deg);
+    /* -webkit-transform: rotate(-5deg);
     -ms-transform: rotate(-5deg);
-    transform: rotate(-5deg);
-    content: "";
+    transform: rotate(-5deg); */
+    /* content: "";
     position: absolute;
-    bottom: -100px; }
+    bottom: -100px; } */
     @media screen and (max-width: 960px) {
       .ftco-slant:after {
         bottom: -150px; } }
@@ -272,7 +272,7 @@ textarea {
   padding: 7em 0 7em 0; }
   .ftco-section.ftco-slant,
   .ftco-footer.ftco-slant {
-    padding: 7em 0 22em 0; }
+    /* padding: 7em 0 22em 0;*/ } 
   .ftco-section .ftco-heading,
   .ftco-footer .ftco-heading {
     font-size: 40px;
@@ -544,3 +544,27 @@ textarea {
   100% {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -136px; } }
+
+    .flex {
+      position: fixed;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      margin-left: 20%;
+      margin-right: 20%;
+      margin-top: 5%;
+  }
+
+  .Background_canvas {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    }
+    .arriba
+    {
+      z-index:2;
+    }
