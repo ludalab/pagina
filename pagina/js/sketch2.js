@@ -17,10 +17,11 @@ function setup() {
   colorMode(RGB);
   colores = [color(250, 107, 255),color(116, 255, 222),color(174, 60, 215),color(67, 0, 91),color(70, 255, 164)];
   colores2 = [color(50, 0, 108),color(244, 6, 126),color(255, 80, 164),color(215, 94, 173),color(244, 206, 227)];
-  colores3 = [color(238, 246, 232),color(246, 226, 228),color(240, 208, 231),color(194, 141, 193),color(189, 202, 210)];
+  colores4 = [color(238, 246, 232),color(246, 226, 228),color(240, 208, 231),color(194, 141, 193),color(189, 202, 210)];
+  colores3 = [color(244, 236, 214), color(215, 129, 106), color(101, 116, 58), color(57, 79, 73)];
 
-  changeColorSpeed = 0.5;
-  moveTriangleSpeed = 0.015;
+  changeColorSpeed = 0.01;
+  moveTriangleSpeed = 0.015; 
 
   frameRate(24);
   sat = 10;
@@ -47,8 +48,8 @@ function setup() {
 function draw() {
   background(220);
   translate(-separacion / 2, -separacion / 2);
-  changeColorSpeed = (mouseX/width)/10;
-  moveTriangleSpeed = (mouseY/height)/10;
+  // changeColorSpeed = 0.05;
+  // moveTriangleSpeed = 0.002;
   for (var i = 0; i < cantidad + 2; i++) {
     for (var j = 0; j < cantidad + 2; j++) {
       grilla[i][j].move();
@@ -59,9 +60,12 @@ function draw() {
       //grilla[i][j].display();
     }
   }
-  fill(255,255,255,200);
-  noStroke();
-  rect(0,2*height/5+10,2*width,3*height/7+20);
+  // fill(255,255,255,200);
+  // noStroke();
+  // rect(0,2*height/5+10,2*width,3*height/7+20);
+
+  
+  
 }
 
 class Punto {
@@ -137,12 +141,12 @@ class Triangulo {
   }
 
   display() {
-    stroke(this.color2);
+    stroke(50);
     fill(this.color1);
 
     triangle(this.punto1.x, this.punto1.y, this.punto2.x, this.punto2.y, this.punto4.x, this.punto4.y);
 
-    stroke(this.color1);
+    stroke(50);
     fill(this.color2);
 
     triangle(this.punto1.x, this.punto1.y, this.punto3.x, this.punto3.y, this.punto4.x, this.punto4.y);
